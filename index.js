@@ -13,13 +13,16 @@ mongoose.Promise = global.Promise;
 
 // MIDDLEWARE STACK
 
-// 1st middleware - parse data
+// 1st middleware - serve static files
+app.use(express.static('public'));
+
+// 2nd middleware - parse data
 app.use(bodyParser.json());
 
-// 2nd middleware - initialize routes specified in api.js file
+// 3rd middleware - initialize routes specified in api.js file
 app.use('/api', require('./routes/api'));
 
-// 3rd middleware - error handling (custom middleware)
+// 4th middleware - error handling (custom middleware)
 app.use((err,req,res,next) => {
     //console.log(err)
     // change status, then return error msg:
