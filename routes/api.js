@@ -23,7 +23,11 @@ router.put('/ninjas/:id', (req, res, next) => {
 
 // delete a ninja from the db
 router.delete('/ninjas/:id', (req, res, next) => {
-    res.send({type:'DELETE'})
+    // findByIdAndRemove - a mongoose method; compare id from url params with _id in DB:
+    Ninja.findByIdAndRemove({_id: req.params.id}).then(ninja => {
+        // a Promise returns the ninja that was removed - we can send it in res:
+        res.send(ninja)
+    });
 });
 
 module.exports = router;
