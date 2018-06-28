@@ -4,8 +4,38 @@ const Ninja = require('../models/ninja');
 
 // get a list of ninjas from the db
 router.get('/ninjas', (req, res, next) => {
-    res.send({type:'GET'})
+
+    /*
+    To get all ninjas:
+    Ninja.find({}).then(ninjas => {
+        res.send(ninjas)
+    })
+    */
+   /*
+   Outdated example from tutorial:
+   Ninja.geoNear(
+       {type: 'Point', coordinates: [parseFloat(req.query.lng), parseFloat(req.query.lnt)]},
+       {maxDistance: 100000, spherical: true}
+    ).then(ninjas => {
+        res.send(ninjas)
+    })
+    */
+   
+    Ninja.aggregate().near({
+        near: {
+         'type': 'Point',
+         'coordinates': [parseFloat(req.query.lng), parseFloat(req.query.lat)]
+        },
+        maxDistance: 100000,
+        spherical: true,
+        distanceField: "dis"
+       }).then(ninjas => {
+        res.send(ninjas)
+    })
+
 });
+
+// Example GET request: localhost:4000/api/ninjas?lng=-80&lat=25
 
 // add a new ninja to the db
 router.post('/ninjas', (req, res, next) => {
